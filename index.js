@@ -200,14 +200,14 @@ function updateFormationDocumentApi(){
             // Se obtiene el documento basado en los id_game del array de juegos
             var client = new DocumentClient( documentdbOptions.host, { masterKey: documentdbOptions.masterkey }, connectionPolicy);
             client.queryDocuments(collLink, querySpec, { enableCrossPartitionQuery: true }).toArray(function (err, results) {
-                console.log(err);
                 if (!err) {
                     if (results.length > 0) {
                         
                         // Si existe el documento y no existen errores se lee el API de formación y se llena el documento con la información obtenida
                         Request.get("http://web-services.test/chalkboard-formacion-gls/" + id_game, function (error, response, body){
-                            console.log('responde API'); 
+                            
                             if(!error){
+                                console.log(body); 
                                 var docExists = results[0];
 
                                 // Si no existen errores en la lectura de la API se actualiza la información del documento
@@ -232,6 +232,8 @@ function updateFormationDocumentApi(){
                                         }
                                     }); 
                                 }                         
+                            }else{
+                                console.log(error); 
                             }
                         }); 
                     }                   
