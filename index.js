@@ -140,6 +140,7 @@ setTimeout(function(){
 
 // Revisa si existe un documento en CosmosDB, si no existe crea uno en blanco con el game_id de juego de golstats
 function addDocumentApi() {
+    var client = new DocumentClient( documentdbOptions.host, { masterKey: documentdbOptions.masterkey }, connectionPolicy);
     if(games_redis_subscribe.length > 0){
 
         // Se recorre el array de juegos activos
@@ -155,7 +156,6 @@ function addDocumentApi() {
             };          
 
             // Se obtiene el documento basado en los id_game del array de juegos
-            var client = new DocumentClient( documentdbOptions.host, { masterKey: documentdbOptions.masterkey }, connectionPolicy);
             client.queryDocuments(collLink, querySpec, { enableCrossPartitionQuery: true }).toArray(function (err, results) {
   
                 if (!err) {
@@ -183,6 +183,7 @@ function addDocumentApi() {
 
 // Obtiene los datos desde la API de formación y llena el documento creado que este en blanco en cosmosDB basado en el id de golstats
 function updateFormationDocumentApi(){ 
+    var client = new DocumentClient( documentdbOptions.host, { masterKey: documentdbOptions.masterkey }, connectionPolicy);
     if(games_redis_subscribe.length > 0){
 
         // Se recorre el array de juegos activos
@@ -198,13 +199,13 @@ function updateFormationDocumentApi(){
             };         
 
             // Se obtiene el documento basado en los id_game del array de juegos
-            var client = new DocumentClient( documentdbOptions.host, { masterKey: documentdbOptions.masterkey }, connectionPolicy);
             client.queryDocuments(collLink, querySpec, { enableCrossPartitionQuery: true }).toArray(function (err, results) {
                 if (!err) {
                     if (results.length > 0) {
                         
                         // Si existe el documento y no existen errores se lee el API de formación y se llena el documento con la información obtenida
-                        Request.get("http://web-services.test/chalkboard-formacion-gls/" + id_game, function (error, response, body){
+                        //Request.get("http://web-services.test/chalkboard-formacion-gls/" + id_game, function (error, response, body){                            
+                        Request.get("http://golstats-fmf-services.azurewebsites.net/chalkboard-formacion-gls/" + id_game, function (error, response, body){
                             
                             if(!error){
                                 console.log(body); 
@@ -248,6 +249,7 @@ function updateFormationDocumentApi(){
 
 // Inserta las jugadas originales de pizarra a los documentos de los juegos activos
 function addPizarraApi() {
+    var client = new DocumentClient( documentdbOptions.host, { masterKey: documentdbOptions.masterkey }, connectionPolicy);
     // Se crea una copia del array de jugadas para poder trabajar solo con las jugadas por bloques
     var plays_redis_insert_1 = plays_redis_insert.slice();
     if(plays_redis_insert_1.length > 0){
@@ -272,7 +274,6 @@ function addPizarraApi() {
             };
 
             // Se obtiene el documento correspondiente al game almacenado en la copia del array de jugadas
-            var client = new DocumentClient( documentdbOptions.host, { masterKey: documentdbOptions.masterkey }, connectionPolicy);
             client.queryDocuments(collLink, querySpec, { enableCrossPartitionQuery: true })
               .toArray(function (err, results) {
                 if (!err) {
@@ -305,7 +306,6 @@ function addPizarraApi() {
                                 };
 
                                 // Se obtienen los id de todas las jugadas que contiene ese documento
-                                var client = new DocumentClient( documentdbOptions.host, { masterKey: documentdbOptions.masterkey }, connectionPolicy);
                                 client.queryDocuments(collLink, querySpec, { enableCrossPartitionQuery: true })
                                 .toArray(function (err1, results1) {                                    
                                     if(!err1){
@@ -327,6 +327,7 @@ function addPizarraApi() {
 
 // Inserta las jugadas modificadas de pizarra a los documentos de los juegos activos
 function updatePizarraApi() {
+    var client = new DocumentClient( documentdbOptions.host, { masterKey: documentdbOptions.masterkey }, connectionPolicy);
     var plays_redis_update_1 = plays_redis_update.slice();
     if(plays_redis_update_1.length > 0){
 
@@ -347,7 +348,6 @@ function updatePizarraApi() {
                     ] 
             }; 
 
-            var client = new DocumentClient( documentdbOptions.host, { masterKey: documentdbOptions.masterkey }, connectionPolicy);
             client.queryDocuments(collLink, querySpec, { enableCrossPartitionQuery: true })
               .toArray(function (err, results) {
                 if (!err) {
@@ -375,7 +375,6 @@ function updatePizarraApi() {
                                         ] 
                                 };
 
-                                var client = new DocumentClient( documentdbOptions.host, { masterKey: documentdbOptions.masterkey }, connectionPolicy);
                                 client.queryDocuments(collLink, querySpec, { enableCrossPartitionQuery: true })
                                 .toArray(function (err1, results1) {                                    
                                         if(!err1){
@@ -396,6 +395,7 @@ function updatePizarraApi() {
 
 // Inserta las jugadas de heatmap a los documentos de los juegos activos
 function addHeatmapApi() {
+    var client = new DocumentClient( documentdbOptions.host, { masterKey: documentdbOptions.masterkey }, connectionPolicy);
     var heatmap_redis_insert_1 = heatmap_redis_insert.slice();
     if(heatmap_redis_insert_1.length > 0){
 
@@ -416,7 +416,6 @@ function addHeatmapApi() {
                     ] 
             }; 
 
-            var client = new DocumentClient( documentdbOptions.host, { masterKey: documentdbOptions.masterkey }, connectionPolicy);
             client.queryDocuments(collLink, querySpec, { enableCrossPartitionQuery: true })
               .toArray(function (err, results) {
                 if (!err) {
@@ -444,7 +443,6 @@ function addHeatmapApi() {
                                         ] 
                                 };
 
-                                var client = new DocumentClient( documentdbOptions.host, { masterKey: documentdbOptions.masterkey }, connectionPolicy);
                                 client.queryDocuments(collLink, querySpec, { enableCrossPartitionQuery: true })
                                 .toArray(function (err1, results1) {                                    
                                     if(!err1){
