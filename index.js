@@ -64,20 +64,26 @@ sub_heatmap.monitor(function (err, res) {
 
 // Evento monitor de redis nodejs de chalkboard
 sub_chalkboard.on("monitor", function (time, args, raw_reply) {
-
     //Obtengo datos del partido desde api
-    if(args[0] == 'subscribe'){
+    /*if(args[0] == 'subscribe'){
         var array_args = args[1].split('.');
         var id_game = array_args[1];
 
         if(!games_redis_subscribe.includes(id_game)){
             games_redis_subscribe.push(id_game);
         }
-    }
+    }*/
 
     // Llenamos los arrays correspondiente al evento que recibimos
     var obj_save = [];
-    if(args[0] == 'publish'){
+    if(args[0] == 'PUBLISH'){
+        var array_args = args[1].split('.');
+        var id_game = array_args[1];
+    
+        if(!games_redis_subscribe.includes(id_game)){
+            games_redis_subscribe.push(id_game);
+        }
+
         var array_args = args[1].split('.');
         var id_game = array_args[1];
         var obj_redis = JSON.parse(args[2]);
@@ -101,18 +107,18 @@ sub_chalkboard.on("monitor", function (time, args, raw_reply) {
 sub_heatmap.on("monitor", function (time, args, raw_reply) {
 
     //Obtengo datos del partido desde api
-    if(args[0] == 'subscribe'){
-        var array_args = args[1].split('.');
-        var id_game = array_args[1];
-
-        if(!games_redis_subscribe.includes(id_game)){
-            games_redis_subscribe.push(id_game);
-        }
-    }
+    //if(args[0] == 'subscribe'){}
 
     // Llenamos los arrays correspondiente al evento que recibimos
     var obj_save = [];
     if(args[0] == 'publish'){
+        var array_args = args[1].split('.');
+        var id_game = array_args[1];
+    
+        if(!games_redis_subscribe.includes(id_game)){
+            games_redis_subscribe.push(id_game);
+        }
+
         var array_args = args[1].split('.');
         var id_game = array_args[1];
         var obj_redis = JSON.parse(args[2]);
@@ -174,6 +180,12 @@ function addDocumentApi() {
 
                         var documentDefinition = obj;
                         client.createDocument(collLink, documentDefinition, function(error, document){}); 
+                    }else{
+
+                        var index_game_array = games_redis_subscribe.indexOf(id_game);
+                        if(index_game_array >= 0){
+                            games_redis_subscribe.splice(index_game_array,1);
+                        }
                     }
                 }
             }); 
