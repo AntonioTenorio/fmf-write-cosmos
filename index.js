@@ -208,7 +208,6 @@ function updateFormationDocumentApi(){
                         Request.get("http://golstats-fmf-services.azurewebsites.net/chalkboard-formacion-gls/" + id_game, function (error, response, body){
                             
                             if(!error){
-                                console.log(body); 
                                 var docExists = results[0];
 
                                 // Si no existen errores en la lectura de la API se actualiza la información del documento
