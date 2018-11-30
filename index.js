@@ -1,10 +1,10 @@
 require('dotenv').config();
 const redis_chalkboard = require('redis');
 const redis_heatmap = require('redis');
-var Request = require("request");
-var extend = require('extend');
-var DocumentClient = require('documentdb').DocumentClient;
-var DocumentBase   = require('documentdb').DocumentBase;
+const Request = require("request");
+const DocumentClient = require('documentdb').DocumentClient;
+const DocumentBase   = require('documentdb').DocumentBase;
+const sql = require('mssql')
 
 const argv = require('yargs')
     .usage('Usage: node $0')
@@ -111,7 +111,7 @@ sub_heatmap.on("monitor", function (time, args, raw_reply) {
 
     // Llenamos los arrays correspondiente al evento que recibimos
     var obj_save = [];
-    if(args[0] == 'publish'){
+    if(args[0] == 'PUBLISH'){
         var array_args = args[1].split('.');
         var id_game = array_args[1];
     
